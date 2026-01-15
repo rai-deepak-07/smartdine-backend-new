@@ -1,6 +1,6 @@
-from djongo import models
+from django.db import models
 
-class Staff(models.MongoModel):
+class Staff(models.Model):
     ROLE_CHOICES = [
         ('chef', 'Chef'), ('manager', 'Manager'), ('waiter', 'Waiter'),
         ('cleaner', 'Cleaner'), ('cashier', 'Cashier'), ('delivery', 'Delivery Boy'),

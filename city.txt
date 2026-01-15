@@ -1,0 +1,66 @@
+from apps.geo.models import State, City
+
+# 1. 10 STATES
+states_data = [
+    ("Uttar Pradesh",),
+    ("Madhya Pradesh",),
+    ("Delhi",),
+    ("Rajasthan",),
+    ("Maharashtra",),
+    ("Gujarat",),
+    ("Bihar",),
+    ("Haryana",),
+    ("Punjab",),
+    ("Uttarakhand",)
+]
+
+states = {}
+for state_name in states_data:
+    state, created = State.objects.get_or_create(name=state_name[0])
+    states[state_name[0]] = state
+    print(f"✅ State created: {state.name}")
+
+# 2. CITIES - 10+ per state (UP has Kanpur, Chitrakoot, Lucknow)
+cities_data = [
+    # Uttar Pradesh (13 cities - REQUIRED: Kanpur, Chitrakoot, Lucknow)
+    ("Uttar Pradesh", ["Lucknow", "Kanpur", "Chitrakoot", "Varanasi", "Agra", "Allahabad", "Ghaziabad", "Noida", "Meerut", "Bareilly", "Moradabad", "Aligarh", "Gorakhpur"]),
+    
+    # Madhya Pradesh (12 cities)
+    ("Madhya Pradesh", ["Bhopal", "Indore", "Gwalior", "Jabalpur", "Ujjain", "Sagar", "Satna", "Rewa", "Ratlam", "Dewas", "Katni", "Murwara"]),
+    
+    # Delhi (3 cities)
+    ("Delhi", ["Delhi", "New Delhi", "Noida"]),
+    
+    # Rajasthan (10 cities)
+    ("Rajasthan", ["Jaipur", "Jodhpur", "Udaipur", "Ajmer", "Kota", "Bikaner", "Bharatpur", "Alwar", "Sikar", "Pali"]),
+    
+    # Maharashtra (10 cities)
+    ("Maharashtra", ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad", "Solapur", "Amravati", "Kolhapur", "Akola", "Nanded"]),
+    
+    # Gujarat (10 cities)
+    ("Gujarat", ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Junagadh", "Gandhinagar", "Anand", "Porbandar"]),
+    
+    # Bihar (8 cities)
+    ("Bihar", ["Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Darbhanga", "Bihar Sharif", "Purnia", "Arrah"]),
+    
+    # Haryana (7 cities)
+    ("Haryana", ["Gurugram", "Faridabad", "Panipat", "Ambala", "Yamunanagar", "Rohtak", "Hisar"]),
+    
+    # Punjab (7 cities)
+    ("Punjab", ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "Hoshiarpur", "Mohali"]),
+    
+    # Uttarakhand (6 cities)
+    ("Uttarakhand", ["Dehradun", "Haldwani", "Roorkee", "Rudrapur", "Haridwar", "Kashipur"])
+]
+
+city_count = 0
+for state_name, city_names in cities_data:
+    state = states[state_name]
+    for city_name in city_names:
+        city, created = City.objects.get_or_create(name=city_name, state=state)
+        if created:
+            city_count += 1
+            print(f"✅ City created: {city_name}, {state_name}")
+
+print(f"\n🎉 TOTAL: {len(states)} STATES + {city_count} CITIES CREATED!")
+print(f"✅ UP has Lucknow, Kanpur, Chitrakoot - CONFIRMED!")

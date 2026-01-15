@@ -1,8 +1,8 @@
-from djongo import models
+from django.db import models
 from django.utils import timezone
 from datetime import timedelta, time, datetime
 
-class Booking(models.MongoModel):
+class Booking(models.Model):
     STATUS_CHOICES = [('booked', 'Booked'), ('dinning', 'Dinning'), 
                      ('completed', 'Completed'), ('cancelled', 'Cancelled')]
     

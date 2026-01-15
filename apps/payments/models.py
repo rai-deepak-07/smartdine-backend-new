@@ -1,8 +1,9 @@
-from djongo import models
+from django.db import models
 from django.utils import timezone
 from datetime import timedelta
 
-class PlatformSubscription(models.MongoModel):
+'''
+class PlatformSubscription(models.Model):
     STATUS_CHOICES = [('active', 'Active'), ('pending', 'Pending'), 
                      ('expired', 'Expired'), ('cancelled', 'Cancelled')]
     
@@ -21,3 +22,29 @@ class PlatformSubscription(models.MongoModel):
             self.restaurant.is_visible_to_users = False
             self.restaurant.save()
         super().save(*args, **kwargs)
+'''
+
+
+
+from django.db import models
+from django.utils import timezone
+from decimal import Decimal
+from apps.restaurant.models import Restaurant
+
+class MockPayment(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('refunded', 'Refunded'),
+    ]
+
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='payments', null=True, blank=True)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    payment_method = models.CharField(max_length=50, default='UPI')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    transaction_id = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.restaurant.res_name} - ₹{self.amount} - {self.status}"

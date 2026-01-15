@@ -12,6 +12,8 @@ djongo==1.2.31
 dnspython==2.8.0
 idna==3.11
 msgpack==1.1.2
+pillow==12.1.0
+psycopg2-binary==2.9.11
 PyJWT==2.10.1
 pymongo==4.16.0
 python-decouple==3.8
