@@ -1,6 +1,6 @@
-from djongo import models
+from django.db import models
 
-class Table(models.MongoModel):
+class Table(models.Model):
     STATUS_CHOICES = [
         ('available', 'Available'), ('reserved', 'Reserved'), 
         ('occupied', 'Occupied'), ('completed', 'Completed'), ('cleaning', 'Cleaning')

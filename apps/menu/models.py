@@ -1,6 +1,6 @@
-from djongo import models
+from django.db import models
 
-class MenuCategory(models.MongoModel):
+class MenuCategory(models.Model):
     restaurant = models.ForeignKey('restaurant.Restaurant', on_delete=models.CASCADE, 
                                   related_name='menu_categories')
     name = models.CharField(max_length=100)
@@ -8,7 +8,7 @@ class MenuCategory(models.MongoModel):
     class Meta:
         unique_together = ['restaurant', 'name']
 
-class MenuItem(models.MongoModel):
+class MenuItem(models.Model):
     restaurant = models.ForeignKey('restaurant.Restaurant', on_delete=models.CASCADE, 
                                   related_name='menu_items')
     category = models.ForeignKey(MenuCategory, on_delete=models.CASCADE)

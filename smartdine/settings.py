@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+from datetime import timedelta
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +31,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'accounts.User'
 
 # Application definition
 
@@ -42,19 +47,23 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'channels',
-    'apps.geo',
-    'apps.accounts',
-    'apps.restaurant',
     'apps.menu',
     'apps.staff',
     'apps.tables',
     'apps.bookings',
     'apps.user',
     'apps.orders',
-    'apps.payments',
     'apps.team',
     'apps.common',
     'apps.admin_panel',
+    # 'apps.restaurant',
+    # 'apps.geo',
+    # 'apps.accounts',
+    # 'apps.payments',
+    'apps.restaurant.apps.RestaurantConfig',
+    'apps.geo.apps.GeoConfig',
+    'apps.accounts.apps.AccountsConfig',
+    'apps.payments.apps.PaymentsConfig',
 ]
 
 MIDDLEWARE = [
@@ -95,22 +104,25 @@ WSGI_APPLICATION = 'smartdine.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# MongoDB Configuration by @rai_deepak_07
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'smartdine_db',
-        'CLIENT': {'host': config('MONGO_URL')},
-        'LOGGING': {'version': 1, 'loggers': {'djongo': {'level': 'DEBUG'}}}
+        'USER': 'postgres',
+        'PASSWORD': '2002',  # Your PostgreSQL password
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
 }
 

@@ -6,4 +6,4 @@ class CommonConfig(AppConfig):
     name = 'apps.common'
     
     def ready(self):
-        import common.signals
+        import apps.common.signals

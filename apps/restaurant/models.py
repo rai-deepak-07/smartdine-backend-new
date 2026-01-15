@@ -1,11 +1,11 @@
-from djongo import models
+from django.db import models
 from django.utils import timezone
 from django.core.validators import RegexValidator, FileExtensionValidator
 from django.contrib.auth.hashers import make_password
 from datetime import time
 from django.utils.html import format_html
 
-class Restaurant(models.MongoModel):
+class Restaurant(models.Model):
     # Auto-generated ID
     id = models.CharField(max_length=50, primary_key=True, editable=False)
     
@@ -27,7 +27,7 @@ class Restaurant(models.MongoModel):
     city = models.ForeignKey('geo.City', on_delete=models.PROTECT)
     
     # Operations
-    is_open = models.BooleanField(default=True)
+    is_open = models.BooleanField(default=False)
     opening_time = models.TimeField(default=time(10, 0))
     closing_time = models.TimeField(default=time(22, 0))
     
@@ -83,16 +83,19 @@ class Restaurant(models.MongoModel):
         self.updated_at = timezone.now()
         super().save(*args, **kwargs)
 
-class RestaurantBank(models.MongoModel):
+class RestaurantBank(models.Model):
     restaurant = models.OneToOneField(Restaurant, on_delete=models.CASCADE)
     upi_id = models.CharField(max_length=100, unique=True)
     upi_registered_name = models.CharField(max_length=100)
     pan_no = models.CharField(max_length=10)
 
-class RestaurantAnalytics(models.MongoModel):
+class RestaurantAnalytics(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='analytics')
     date = models.DateField()
     total_bookings = models.PositiveIntegerField(default=0)
     total_orders = models.PositiveIntegerField(default=0)
     revenue = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     avg_diners = models.FloatField(default=0)
+    
+    class Meta:
+        unique_together = ['restaurant', 'date']

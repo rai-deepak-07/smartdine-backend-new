@@ -1,7 +1,7 @@
-from djongo import models
+from django.db import models
 from django.utils import timezone
 
-class Order(models.MongoModel):
+class Order(models.Model):
     STATUS_CHOICES = [('pending', 'Pending'), ('preparing', 'Preparing'), 
                      ('served', 'Served'), ('completed', 'Completed'), ('cancelled', 'Cancelled')]
     
@@ -19,7 +19,7 @@ class Order(models.MongoModel):
         self.total_amount = total
         self.save(update_fields=['total_amount'])
 
-class OrderItem(models.MongoModel):
+class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     menu_item = models.ForeignKey('menu.MenuItem', on_delete=models.CASCADE)
     

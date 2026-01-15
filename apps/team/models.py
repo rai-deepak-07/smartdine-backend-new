@@ -1,7 +1,7 @@
-from djongo import models
+from django.db import models
 from django.utils import timezone
 
-class TeamMember(models.MongoModel):
+class TeamMember(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     mobile = models.CharField(max_length=20)
