@@ -1,9 +1,7 @@
-import os
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator, MinLengthValidator
 from django.utils import timezone
-from django.contrib.auth.hashers import make_password
+from django.core.validators import RegexValidator
 
 
 class User(AbstractUser):
@@ -13,12 +11,16 @@ class User(AbstractUser):
         ('staff', 'Restaurant Staff'),
         ('customer', 'Customer'),
     ]
+    
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='customer')
     phone = models.CharField(max_length=15, blank=True)
     email = models.EmailField(unique=True)
     loyalty_points = models.PositiveIntegerField(default=0)
     total_earned_points = models.PositiveIntegerField(default=0)
     points_updated_at = models.DateTimeField(auto_now=True)
+    email_verified = models.BooleanField(default=False)
+    auto_generated_password = models.CharField(max_length=128, blank=True, null=True)
+    is_active = models.BooleanField(default=False)
     
     groups = models.ManyToManyField(
         'auth.Group',
@@ -38,11 +40,12 @@ class User(AbstractUser):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     address = models.TextField(blank=True)
     pincode = models.CharField(max_length=6, blank=True)
     city = models.CharField(max_length=100, blank=True)
-    
+
+
 class PasswordResetToken(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=128, unique=True)
@@ -51,6 +54,7 @@ class PasswordResetToken(models.Model):
     
     def is_valid(self):
         return (not self.is_used) and (timezone.now() - self.created_at).seconds < 600
+
 
 class LoyaltyTransaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='loyalty_transactions')

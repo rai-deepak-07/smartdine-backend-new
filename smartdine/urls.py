@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from apps.accounts.views import UniversalLoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,7 +17,8 @@ urlpatterns = [
     
 
     # JWT Authentication
-    path('api/v1/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/v1/auth/login/', UniversalLoginView.as_view(), name='universal_login'),
+    # path('api/v1/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
